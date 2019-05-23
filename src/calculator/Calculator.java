@@ -100,18 +100,22 @@ public class Calculator implements ActionListener{
 	}
 
 	@Override
+	//入力された数字によって処理を分岐
 	public void actionPerformed(ActionEvent e) {
 		String enterdValue = e.getActionCommand();
 
-		if ( "1234567890".indexOf(enterdValue) != -1 ) {
+		if ( "1234567890.".indexOf(enterdValue) != -1 ) {
 			addNumber(enterdValue);
 		} else if ( "＋－×÷".indexOf(enterdValue) != -1 ) {
 			addSecondNumber(enterdValue);
 		} else if ( "＝".equals(enterdValue) ) {
-			executeCalculation();
+			if( !"".contentEquals(CalculationCaracter) ) {
+				executeCalculation();
+			}
 		} else if ( "AC".equals(enterdValue) ) {
 			deleteNumber();
 		}
+
 		label.setText(FirstNum + CalculationCaracter + OutputNum);
 	}
 
@@ -126,12 +130,18 @@ public class Calculator implements ActionListener{
 
 	//文字列追加処理
 	private void addNumber(String S) {
+		//計算実行直後の結果表示画面から数字入力された場合は表示中の数値とフラグを初期化
 		if (executeFrag) {
-			//計算結果表示を終了し、フラグを初期化
 			OutputNum = "";
 			executeFrag = false;
 		}
+
 		OutputNum += S;
+
+		//表示文字列が"."のみの場合、"0."に補正
+		if ( ".".equals(OutputNum)) {
+			OutputNum = "0" + OutputNum;
+		}
 	}
 
 	//計算実行処理
@@ -139,10 +149,10 @@ public class Calculator implements ActionListener{
 		//現在の表示値を計算用フィールドに代入
 		SecondNum = OutputNum;
 
-		//計算用フィールドの値をint型に変形
-		int firstNum  = Integer.parseInt(FirstNum);
-		int secondNum = Integer.parseInt(SecondNum);
-		int resultNum = 0;
+		//計算用フィールドの値をdouble型に変形
+		double firstNum  = Double.parseDouble(FirstNum);
+		double secondNum = Double.parseDouble(SecondNum);
+		double resultNum = 0;
 
 		//演算子毎に分岐し、計算処理を実施
 		if( "＋".equals(CalculationCaracter)) {
@@ -193,6 +203,5 @@ public class Calculator implements ActionListener{
 		CalculationCaracter = "";
 		executeFrag = false;
 	}
-
 
 }
