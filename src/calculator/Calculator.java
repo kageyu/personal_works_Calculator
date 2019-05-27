@@ -24,7 +24,7 @@ public class Calculator implements ActionListener{
 	 */
 	public Calculator() {
 
-		JFrame frame = new JFrame( "Calculator" );
+		JFrame frame = new JFrame( Contants.windowName );
 
 		GridLayout GL1 = new GridLayout(5,1);
 		frame.getContentPane().setLayout( GL1 );
@@ -56,8 +56,8 @@ public class Calculator implements ActionListener{
 		p1.setLayout(new GridLayout(1,2));
 		p1.add(label,BorderLayout.LINE_START);
 
-		//1段目ACボタン
-		JButton AC = new JButton("AC");
+		//1段目ACボタン部分
+		JButton AC = new JButton(Contants.B1d);
 		AC.addActionListener(this);
 		p1.add(AC);
 
@@ -68,10 +68,10 @@ public class Calculator implements ActionListener{
 		p5.setLayout( GL2 );
 
 		String ButtonName[][] = {
-			{"7","8","9","÷"},
-			{"4","5","6","×"},
-			{"1","2","3","－"},
-			{"0",".","＝","＋"},
+			{Contants.B2a,Contants.B2b,Contants.B2c,Contants.B2d},
+			{Contants.B3a,Contants.B3b,Contants.B3c,Contants.B3d},
+			{Contants.B4a,Contants.B4b,Contants.B4c,Contants.B4d},
+			{Contants.B5a,Contants.B5b,Contants.B5c,Contants.B5d},
 		};
 
 		JPanel[] Panels = {p2,p3,p4,p5};
@@ -104,19 +104,19 @@ public class Calculator implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		String enterdValue = e.getActionCommand();
 
-		if ( "1234567890.".indexOf(enterdValue) != -1 ) {
+		if ( Contants.isNumber.indexOf(enterdValue) != -1 ) {
 			addNumber(enterdValue);
-		} else if ( "＋－×÷".indexOf(enterdValue) != -1 ) {
+		} else if ( Contants.isOperator.indexOf(enterdValue) != -1 ) {
 			addSecondNumber(enterdValue);
-		} else if ( "＝".equals(enterdValue) ) {
-			if( !"".contentEquals(CalculationCaracter) ) {
+		} else if ( Contants.isEqual.equals(enterdValue) ) {
+			if( !"".contentEquals(Operator) ) {
 				executeCalculation();
 			}
-		} else if ( "AC".equals(enterdValue) ) {
+		} else if ( Contants.isAC.equals(enterdValue) ) {
 			deleteNumber();
 		}
 
-		label.setText(FirstNum + CalculationCaracter + OutputNum);
+		label.setText(FirstNum + Operator + OutputNum);
 	}
 
 	//表示用フィールド
@@ -125,7 +125,7 @@ public class Calculator implements ActionListener{
 	//計算用フィールド
 	String FirstNum = "";
 	String SecondNum = "";
-	String CalculationCaracter = "";
+	String Operator = "";
 	boolean executeFrag = false;
 
 	//文字列追加処理
@@ -140,7 +140,7 @@ public class Calculator implements ActionListener{
 
 		//表示文字列が"."のみの場合、"0."に補正
 		if ( ".".equals(OutputNum)) {
-			OutputNum = "0" + OutputNum;
+			addNumber("0");
 		}
 	}
 
@@ -155,13 +155,13 @@ public class Calculator implements ActionListener{
 		double resultNum = 0;
 
 		//演算子毎に分岐し、計算処理を実施
-		if( "＋".equals(CalculationCaracter)) {
+		if( Contants.isPlus.equals(Operator)) {
 			resultNum = firstNum + secondNum;
-		}else if( "－".equals(CalculationCaracter)) {
+		}else if( Contants.isMinus.equals(Operator)) {
 			resultNum = firstNum - secondNum;
-		}else if( "×".equals(CalculationCaracter)) {
+		}else if( Contants.isMultiplied.equals(Operator)) {
 			resultNum = firstNum * secondNum;
-		}else if( "÷".equals(CalculationCaracter)) {
+		}else if( Contants.isDivided.equals(Operator)) {
 			resultNum = firstNum / secondNum;
 		}
 
@@ -171,7 +171,7 @@ public class Calculator implements ActionListener{
 		//各種フィールドを初期化
 		FirstNum = "";
 		SecondNum = "";
-		CalculationCaracter = "";
+		Operator = "";
 
 		//fragを設定
 		executeFrag = true;
@@ -180,18 +180,18 @@ public class Calculator implements ActionListener{
 	//計算前入力枠変更処理
 	private void addSecondNumber(String S) {
 		//既に演算子を入力されていたかで分岐
-		if(CalculationCaracter == "") {
+		if(Operator == "") {
 			//入力された演算子を計算用フィールドに代入
 			FirstNum = OutputNum;
 			OutputNum = "";
 			//入力された演算子を計算用フィールドに代入
-			CalculationCaracter = S;
+			Operator = S;
 		}else {
 			//"＝"と同等の処理を実施後、演算子を計算用フィールドに代入
 			executeCalculation();
 			FirstNum = OutputNum;
 			OutputNum = "";
-			CalculationCaracter = S;
+			Operator = S;
 		}
 	}
 
@@ -200,7 +200,7 @@ public class Calculator implements ActionListener{
 		OutputNum = "";
 		FirstNum = "";
 		SecondNum = "";
-		CalculationCaracter = "";
+		Operator = "";
 		executeFrag = false;
 	}
 
